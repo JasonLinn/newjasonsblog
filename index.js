@@ -1,7 +1,7 @@
 var path = require('path');
 var express = require('express');
 var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
+// var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var config = require('config-lite')(__dirname);
 var routes = require('./routes');
