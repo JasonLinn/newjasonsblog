@@ -34,7 +34,7 @@ app.use(session({
     maxAge: config.session.maxAge// 过期时间，过期后 cookie 中的 session id 自动删除
   },
   store: new MongoStore({// 将 session 存储到 mongodb
-    url: config.mongodb// mongodb 地址
+    url: 'mongodb://myblog:myblog@ds145302.mlab.com:45302/heroku_0wkr3hr4'// mongodb 地址
   })
 }));
 // flash 中间件，用来显示通知
