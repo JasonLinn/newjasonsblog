@@ -8,7 +8,7 @@ var routes = require('./routes');
 var pkg = require('./package');
 var app = express();
 
-// prot = process.env.PORT || 5000;
+prot = process.env.PORT || 5000;
 
 // app.use('/',function(req,res) {
 //     res.send(`<html><head>
@@ -57,6 +57,6 @@ app.use(function (req, res, next) {
 routes(app);
 
 // 监听端口，启动程序
-app.listen(config.port, function () {
-  console.log(`${pkg.name} listening on port ${config.port}`);
+app.listen(prot, function () {
+  console.log(`${pkg.name} listening on port ${prot}`);
 });
