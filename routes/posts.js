@@ -6,11 +6,11 @@ var checkLogin = require('../middlewares/check').checkLogin;
 //GET /posts 所有用戶或者特定用戶的文章頁
 //   eg:GET /posts?author=xxx
 router.get('/',function (req,res,next) {
-    res.send(req.flash());
+    res.send('posts');
 })
 //POST /posts 發表一篇文章
 router.get('/posts',function (req,res,next) {
-    res.send(req.flash());
+    res.send('posts');
 })
 //GET /posts/create 發表文章頁
 router.get('/posts/create',function (req,res,next) {

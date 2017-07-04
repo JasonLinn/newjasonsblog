@@ -1,7 +1,15 @@
 var path = require('path');
 var express = require('express');
-var session = require('express-session');
+//session 中間件會在req添加session對象，即req.session初始值為{},
+//當我們登錄後設置req.session.user = 用戶訊息
+//返回瀏覽器的頭信息中會帶上set-cookie 將session id 寫到瀏覽器cookie中，
+//下次該用戶請求時，通過帶上來的cookie中的session id我們就可以查找到該用戶，
+//並將用戶信息保存到req.session.user
+var session = require('express-session'); 
+//將session存儲於mongodb，須結合express-session使用，我們也可以將session
+//存儲於redis，如connect-redis
 var MongoStore = require('connect-mongo')(session);
+//基於session實現的用於通知功能的中間件，須結合express-session使用
 var flash = require('connect-flash');
 var config = require('config-lite')(__dirname);
 var routes = require('./routes');
@@ -39,7 +47,11 @@ app.use(session({
 }));
 // flash 中间件，用来显示通知
 app.use(flash());
-
+// 处理表单及文件上传的中间件
+app.use(require('express-formidable')({
+  uploadDir: path.join(__dirname, 'public/img'),// 上传文件目录
+  keepExtensions: true// 保留后缀
+}));
 // 设置模板全局常量
 app.locals.blog = {
   title: pkg.name,
