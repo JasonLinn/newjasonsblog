@@ -21,7 +21,7 @@ router.post('/', checkNotLogin, function(req, res, next) {
   var password = req.fields.password;
   var repassword = req.fields.repassword;
 
-  // 校验参数
+  // 校验参数123
   try {
     if (!(name.length >= 1 && name.length <= 10)) {
       throw new Error('名字请限制在 1-10 个字符');
