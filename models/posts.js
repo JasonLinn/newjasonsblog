@@ -1,5 +1,27 @@
 var marked = require('marked');
 var Post = require('../lib/mongo').Post;
+var CommentModel = require('./comments');
+
+//給post 添加留言數 commentCount
+Post.plugin('addCommentsCount',{
+  afterFind:function (posts){
+    return Promise.all(posts.map(function(post){
+      return CommentModel.getCommentsCount(post._id).then(function(commentsCount){
+        post.commentsCount = commentsCount;
+        return post;
+      });
+    }));
+  },
+  afterFindOne:function(post){
+    if(post){
+      return CommentModel.getCommentsCount(post._id).then(function(count){
+        post.commentsCount = count;
+        return post;
+      });
+    }
+    return post;
+  }
+});
 
 // 将 post 的 content 从 markdown 转换成 html
 Post.plugin('contentToHtml', {
@@ -23,12 +45,36 @@ module.exports = {
     return Post.create(post).exec();
   },
 
+  //通過文章id 獲取一篇原生文章(編輯文章)
+  getRawPostById:function getRawPostById(postId){
+    return Post
+      .findOne({_id:postId})
+      .populate({path:'author',model:'User'})
+      .exec();
+  },
+  //通過用戶 id 和文章id更新一篇文章
+  updatePostById:function updatePostById(postId,author,data){
+    return Post.update({author:author,_id:postId},{$set:data}).exec();
+  },
+  //通過用戶id和文章id刪除一篇文章
+  delPostById:function delPostById(postId,author){
+    return Post.remove({author:author,_id:postId})
+      .exec()
+      .then(function(res){
+          //文章刪除後，在刪除該文章下的所有留言
+          if(res.result.ok && res.result.n >0){
+            return CommentModel.delCommentsByPostId(postId);
+          }
+      });
+  },
+
   // 通过文章 id 获取一篇文章
   getPostById: function getPostById(postId) {
     return Post
       .findOne({ _id: postId })
       .populate({ path: 'author', model: 'User' })
       .addCreatedAt()
+      .addCommentsCount()
       .contentToHtml()
       .exec();
   },
@@ -44,6 +90,7 @@ module.exports = {
       .populate({ path: 'author', model: 'User' })
       .sort({ _id: -1 })
       .addCreatedAt()
+      .addCommentsCount()
       .contentToHtml()
       .exec();
   },
