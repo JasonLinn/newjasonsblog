@@ -5,5 +5,5 @@ module.exports = {
         key:'myblog',
         maxAge:2592000000
     },
-    mongodb:'mongodb://localhost:27017/myblog'
+    mongodb:'mongodb://newjasonsblog:newjasonsblog@ds153352.mlab.com:53352/heroku_q1pm12v3'
 };
