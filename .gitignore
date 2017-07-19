@@ -6,3 +6,4 @@ config/*
 !config/default.*
 #覆盖率
 coverage
+logs
